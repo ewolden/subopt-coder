@@ -1,5 +1,6 @@
 # subopt-coder
 A simple DHCP sub-option encoder/decoder
+Converts HEX values to readable output. Converts readable output to HEX and BASE64 values.
 
 The script takes as input one of these arguments:
 - A HEX string of the DHCP sub-options 
