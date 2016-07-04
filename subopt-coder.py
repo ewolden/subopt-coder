@@ -13,6 +13,10 @@ def print_sub_options(suboption, length, value):
 	print 'Length: ', length[0]
 	print 'Value: ', value[0]
 	
+def print_sub_optionsv2(suboption, length, value):
+	print '-----'
+	print 'ASCII:', suboption[1], '\t\t', length[1], '\t\t', value[1]
+	print 'HEX:  ', suboption[0], '\t\t', length[0], '\t\t', value[0]
 
 
 def TLVdecode(string, seeker=0):
@@ -20,20 +24,20 @@ def TLVdecode(string, seeker=0):
 	length = [string[seeker+2:seeker+4], int(string[seeker+2:seeker+4], 16)]
 	value = [string[seeker+4:seeker+4+length[1]*2], binascii.a2b_hex(string[seeker+4:seeker+4+length[1]*2])]
 
-	print_sub_options(suboption, length, value)
+	print_sub_optionsv2(suboption, length, value)
 	if len(string) > seeker+4+length[1]*2:
 		nextstring = TLVdecode(string, seeker+4+length[1]*2)
-		return str(suboption[1])+' '+str(length[1])+' '+value[1]+' '+nextstring
+		return str(suboption[1])+' '+value[1]+' '+nextstring
 	else:
 		print '\n\n---------------\nFull string:'
-		return str(suboption[1])+' '+str(length[1])+' '+value[1]
+		return str(suboption[1])+' '+value[1]
 
 def TLVencode(strings, stringnumber=1):
 	suboption = [hex(int(strings[stringnumber]))[2:].zfill(2), strings[stringnumber]]
 	length = [hex(len(strings[stringnumber+1]))[2:].zfill(2), len(strings[stringnumber+1])]
 	value = [binascii.b2a_hex(strings[stringnumber+1]), strings[stringnumber+1]]
 	
-	print_sub_options(suboption, length, value)
+	print_sub_optionsv2(suboption, length, value)
 	if len(strings[1:]) >= stringnumber+3:
 		nextstring=TLVencode(strings, stringnumber+2)
 		return suboption[0]+length[0]+value[0]+nextstring
@@ -43,6 +47,7 @@ def TLVencode(strings, stringnumber=1):
 
 
 if len(sys.argv) == 2:
+	print '\tSub-option \t Length \t Value'
 	print(TLVdecode(sys.argv[1]))
 
 elif len(sys.argv) == 1:
